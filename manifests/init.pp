@@ -1,4 +1,4 @@
-class cassandra ($version, $java_version = 'openjdk_1_7_0',) {
+class cassandra ($version, $java_version = 'openjdk_1_7_0', $datacenter = 'dc1', $rack = 'r1') {
   apt::source { 'cassandra':
     location   => 'http://www.apache.org/dist/cassandra/debian',
     release    => $version,
@@ -15,5 +15,12 @@ class cassandra ($version, $java_version = 'openjdk_1_7_0',) {
   package { 'cassandra':
     ensure  => installed,
     require => [Apt::Source['cassandra'], Apt::Key['2B5C1B00']],
+  }
+
+  service { 'cassandra':
+    ensure     => running,
+    enable     => true,
+    hasstatus  => true,
+    hasrestart => true,
   }
 }
